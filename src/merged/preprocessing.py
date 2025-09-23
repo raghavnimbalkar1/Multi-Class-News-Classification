@@ -14,7 +14,7 @@ print("Setup complete.")
 
 # --- 2. Load Raw Data (Same as before) ---
 print("Step 2: Loading raw data from JSON...")
-df = pd.read_json("../Data/raw/NewsData.json", lines=True)
+df = pd.read_json("../../Data/raw/NewsData.json", lines=True)
 print(f"Loaded {len(df)} articles.")
 
 # --- 3. MERGE CATEGORIES (The New Step) ---
@@ -117,6 +117,6 @@ print("Text processing complete.")
 # --- 5. Save the New Preprocessed Dataset (Updated Path) ---
 
 print("Step 5: Saving the new merged dataset...")
-output_path = "../Data/processed/news_preprocessed_merged.csv"
+output_path = "../../Data/processed/news_preprocessed_merged.csv"
 df[['category', 'clean_text']].to_csv(output_path, index=False)
 print(f"Preprocessing complete. New dataset saved to {output_path}")
