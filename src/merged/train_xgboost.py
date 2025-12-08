@@ -23,7 +23,6 @@ with open("../../models/merged/y_test.pkl", "rb") as f:
 print("Data loading complete.")
 
 # --- 2. Encode Text Labels to Integers ---
-# XGBoost requires integer labels (0, 1, 2...) instead of strings.
 print("Step 2: Encoding text labels to integers...")
 encoder = LabelEncoder()
 y_train_encoded = encoder.fit_transform(y_train)
@@ -38,8 +37,6 @@ print(f"Label encoder saved to {output_encoder_path}")
 
 # --- 3. Initialize XGBoost Classifier ---
 print("Step 3: Initializing XGBClassifier model...")
-# Using 'multi:softmax' for multi-class classification
-# 'n_jobs=-1' uses all available CPU cores to speed up training
 xgb_clf = XGBClassifier(
     objective='multi:softmax', 
     num_class=len(encoder.classes_), 

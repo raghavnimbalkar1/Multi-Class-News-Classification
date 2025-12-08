@@ -5,7 +5,6 @@ import spacy
 from nltk.corpus import stopwords
 
 # --- 1. Initial Setup ---
-# This setup is identical to the original script.
 print("Step 1: Setting up libraries...")
 nltk.download('stopwords', quiet=True) 
 nlp = spacy.load("en_core_web_sm")
@@ -18,8 +17,6 @@ df = pd.read_json("../../Data/raw/NewsData.json", lines=True)
 print(f"Loaded {len(df)} articles.")
 
 # --- 3. MERGE CATEGORIES (The New Step) ---
-# This is the important new logic. We define our plan to merge the 42
-# classes into 13 broader ones to simplify the problem for the model.
 print("Step 3: Merging 42 categories into 13 super-classes...")
 category_mapping = {
     # Politics & World News

@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import SelectKBest, chi2
 
 # --- 1. Load the Merged Dataset (Updated Path) ---
-# We now load the data with the 13 merged categories.
 print("Step 1: Loading the merged and preprocessed dataset...")
 input_path = "../../Data/processed/news_preprocessed_merged.csv"
 df = pd.read_csv(input_path)
@@ -16,9 +15,6 @@ X_text = df['clean_text']
 y = df['category']
 
 # --- 2. Split Data into Train and Test (Unchanged Logic) ---
-# The logic is the same, but it now operates on the 13 new categories.
-# stratify=y is still crucial to ensure each of the 13 classes is
-# represented proportionally in both train and test sets.
 print("Step 2: Splitting data into training (80%) and testing (20%) sets...")
 X_train_text, X_test_text, y_train, y_test = train_test_split(
     X_text, y, test_size=0.2, random_state=69, stratify=y
@@ -30,8 +26,6 @@ X_train_text = X_train_text.fillna('')
 X_test_text = X_test_text.fillna('')
 
 # --- 3. Feature Engineering (Unchanged Logic) ---
-# The methodology for converting text to numbers is kept the same
-# to ensure a fair comparison between the 'Original' and 'Merged' models.
 print("Step 3: Performing TF-IDF Vectorization...")
 tfidf = TfidfVectorizer(max_features=50000, ngram_range=(1,2))
 X_train = tfidf.fit_transform(X_train_text)
@@ -46,8 +40,6 @@ X_test = selector.transform(X_test)
 print(f"Feature selection complete. Selected features: {X_train.shape[1]}")
 
 # --- 4. Saving the New Artifacts (Updated Paths) ---
-# All outputs are saved to the '/Models/Merged/' directory to keep them
-# separate from the original pipeline's outputs.
 print("Step 5: Saving all processed data and models to '/Models/Merged/'...")
 
 with open("../../models/merged/tfidf_vectorizer.pkl", "wb") as f:
