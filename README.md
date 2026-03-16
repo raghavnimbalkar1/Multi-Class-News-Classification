@@ -9,7 +9,7 @@ This project bridges the gap between static machine learning models and live, re
 2. **Inference Pipeline (ML Engine):** Processes the scraped text using TF-IDF and Chi-Squared selection, feeding it into an optimized LinearSVC model to predict news categories (e.g., POLITICS, SPORTS, TECHNOLOGY).
 3. **Frontend & Analytics (Upcoming):** A Streamlit dashboard to visualize category distributions, trending keywords, and summary metrics.
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```text
 Multi-Class-News-Classification/
@@ -26,3 +26,5 @@ Multi-Class-News-Classification/
 │   └── inference.py               # Connects live data to ML models
 │
 └── README.md
+
+## Setup Installation
