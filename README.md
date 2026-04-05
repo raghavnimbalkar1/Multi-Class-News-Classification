@@ -1,75 +1,299 @@
-cat << 'EOF' > README.md
-# Dynamic Analytics Dashboard System (DADS) & News Classifier
+# Multi-Class News Classification System
 
-An end-to-end Machine Learning pipeline and web scraping tool that extracts live news articles from websites and automatically classifies them into 13 distinct categories using a custom-trained Support Vector Machine (LinearSVC).
+A comprehensive machine learning pipeline for classifying news articles into multiple categories using NLP and advanced classification algorithms.
 
-## Project Overview
+## 📋 Project Overview
 
-This project bridges the gap between static machine learning models and live, real-world data. It consists of two completed phases, with a third on the way:
-1. **Data Collection (Live Scraper):** Dynamically extracts headlines and article summaries from top news homepages (like The Guardian, BBC, CBC) or single article URLs.
-2. **Inference Pipeline (ML Engine):** Processes the scraped text using TF-IDF and Chi-Squared selection, feeding it into an optimized LinearSVC model to predict news categories (e.g., POLITICS, SPORTS, TECHNOLOGY).
-3. **Frontend & Analytics (Upcoming):** A Streamlit dashboard to visualize category distributions, trending keywords, and summary metrics.
+This project implements a complete end-to-end news classification system with two parallel approaches:
 
-## Project Structure
+1. **Original Approach**: 42 news categories using LinearSVC
+2. **Merged Approach**: 13 consolidated super-categories with both LinearSVC and XGBoost models
 
-`models/`
-`├── merged/`
-`│   ├── tfidf_vectorizer.pkl   # Trained TF-IDF vectorizer`
-`│   ├── chi2_selector.pkl      # Chi-Squared feature selector`
-`│   ├── svm_model.pkl          # Optimized 13-class LinearSVC`
-`│   └── label_encoder.pkl      # Target label decoder`
+### Architecture
 
-`src/`
-`├── scraper.py                 # Live web scraping engine (newspaper)`
-`└── inference.py               # Connects live data to ML models`
+The system follows a modular 4-stage pipeline:
 
-`README.md`
+```
+Stage 1: Data Collection  →  Stage 2: Preprocessing  →  Stage 3: ML Pipeline  →  Stage 4: Analytics
+   (Scraper)                (Text Cleaning, NLP)      (Training, Evaluation)    (Reports, Dashboard)
+```
 
-## Setup & Installation
+## 🚀 Quick Start
 
-**1. Clone the repository**
-git clone https://github.com/yourusername/Multi-Class-News-Classification.git
+### Prerequisites
+
+- Python 3.8+
+- pip or conda
+- 4GB+ RAM recommended
+- macOS/Linux/Windows
+
+### Installation
+
+1. **Clone the repository**:
+```bash
+git clone https://github.com/raghavnimbalkar1/Multi-Class-News-Classification.git
 cd Multi-Class-News-Classification
+```
 
-**2. Install dependencies**
-Make sure you have Python 3.8+ installed. 
-pip install pandas scikit-learn nltk newspaper3k
+2. **Create a virtual environment** (recommended):
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-*Note for macOS users:* If you encounter OpenSSL/LibreSSL errors while scraping, downgrade `urllib3`:
-pip install "urllib3<2"
+3. **Install dependencies**:
+```bash
+pip install -r requirements.txt
+```
 
-**3. Download required NLTK datasets**
-The scraping and preprocessing engines rely on specific NLTK dictionaries. Run the following commands in your terminal to fetch them:
-python3 -m nltk.downloader wordnet omw-1.4 punkt_tab
+4. **Download NLP models** (first time only):
+```bash
+python3 -c "
+import nltk; import spacy
+nltk.download('stopwords')
+import subprocess
+subprocess.run(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
+"
+```
 
-## Usage
+## 🏃 Usage
 
-Currently, the pipeline runs entirely via the Command Line Interface (CLI). 
+### Run Complete Pipeline
 
-### Testing the Scraper
-To extract articles from a news homepage without running predictions, run:
-python3 src/scraper.py
+```bash
+# Run both original and merged approaches
+python3 src/pipeline.py --approach all
 
-*Output: A Pandas DataFrame containing headline and short_description.*
+# Run only original approach (42 categories)
+python3 src/pipeline.py --approach original
 
-### Running the End-to-End Inference
-To scrape a website, preprocess the live text, extract features, and predict the news categories using the trained model, run:
-python3 src/inference.py
+# Run only merged approach (13 categories)
+python3 src/pipeline.py --approach merged
+```
 
-*Output: A Pandas DataFrame appending a predicted_category column to the scraped articles.*
+### Individual Step Execution
 
-## Architecture Flow
+**Original Pipeline (42 categories)**:
+```bash
+python3 src/original/preprocessing.py          # Clean data
+python3 src/original/feature_engineering.py    # TF-IDF + Feature Selection
+python3 src/original/train_model.py            # Train SVM
+python3 src/original/evaluate.py               # Generate reports
+```
 
-1. **Input:** User provides a URL (Homepage or Single Article).
-2. **Scraper:** `newspaper` fetches HTML, bypasses basic bot-protections, and extracts text. `nltk` summarizes the text.
-3. **Preprocessing:** Text is cleaned (regex, lowercased).
-4. **Vectorization:** `tfidf_vectorizer` converts text to unigram/bigram numerical weights.
-5. **Feature Selection:** `chi2_selector` narrows down the top 20,000 most relevant features.
-6. **Prediction:** `svm_model` predicts the classification label.
-7. **Output:** Results are decoded via `label_encoder` and returned for analytics.
+**Merged Pipeline (13 categories)**:
+```bash
+python3 src/merged/preprocessing.py            # Merge + Clean data
+python3 src/merged/feature_engineering.py      # TF-IDF + Feature Selection
+python3 src/merged/train_model.py              # Train SVM
+python3 src/merged/train_xgboost.py            # Train XGBoost
+python3 src/merged/evaluate.py                 # Evaluate SVM
+python3 src/merged/evaluate_xgboost.py         # Evaluate XGBoost
+```
 
-##  Next Steps
-- [ ] Build interactive Streamlit User Interface.
-- [ ] Generate keyword distribution analytics.
-- [ ] Deploy to cloud hosting.
-EOF
+### Analyze & Compare Models
+
+```bash
+python3 src/model_analysis.py
+```
+
+Generates:
+- `model_comparison_report.txt` - Detailed metrics comparison
+- `visualizations/accuracy_comparison.png` - Accuracy chart
+
+## 📁 Project Structure
+
+```
+Multi-Class-News-Classification/
+├── config.yaml                    # Configuration (paths, parameters)
+├── requirements.txt               # Python dependencies
+├── README.md                      # This file
+├── Data/
+│   ├── raw/                       # Raw news data (NewsData.json)
+│   └── processed/                 # Preprocessed datasets
+├── models/
+│   ├── original/                  # 42-category models + reports
+│   └── merged/                    # 13-category models + reports
+├── src/
+│   ├── config_loader.py           # Configuration management
+│   ├── pipeline.py                # Unified pipeline orchestration
+│   ├── model_analysis.py          # Model comparison utilities
+│   ├── scraper.py                 # Web scraping utilities
+│   ├── original/                  # 42-category pipeline
+│   │   ├── preprocessing.py
+│   │   ├── feature_engineering.py
+│   │   ├── train_model.py
+│   │   └── evaluate.py
+│   └── merged/                    # 13-category pipeline
+│       ├── preprocessing.py
+│       ├── feature_engineering.py
+│       ├── train_model.py
+│       ├── train_xgboost.py
+│       ├── evaluate.py
+│       └── evaluate_xgboost.py
+├── visualizations/                # Generated charts and visualizations
+└── logs/                          # Pipeline execution logs
+```
+
+## 🔧 Configuration
+
+Edit `config.yaml` to customize paths, preprocessing, and model parameters:
+
+```yaml
+preprocessing:
+  remove_html: true
+  lowercase: true
+  remove_stopwords: true
+  lemmatization: true
+
+features:
+  tfidf:
+    max_features: 50000
+    ngram_range: [1, 2]
+  feature_selection:
+    k_best_features: 20000
+```
+
+## 📊 Pipeline Steps
+
+### 1. Preprocessing
+- Clean text (lowercase, remove HTML/special characters)
+- Remove stopwords using NLTK
+- Lemmatization using SpaCy
+
+### 2. Feature Engineering
+- TF-IDF Vectorization (50K features, unigrams + bigrams)
+- Chi-Squared Feature Selection (top 20K features)
+- Train/Test Split (80/20, stratified)
+
+### 3. Model Training
+- **Original**: LinearSVC on 42 categories
+- **Merged**: LinearSVC + XGBoost on 13 categories
+
+### 4. Evaluation
+- Per-class metrics (precision, recall, F1-score)
+- Macro & weighted averages
+- Confusion matrices
+- Accuracy scores
+
+## 🎯 Category Mapping (13 Super-Categories)
+
+| Super-Category | Original Categories (Sample) |
+|---|---|
+| **Politics & World News** | THE WORLDPOST, WORLD NEWS, U.S. NEWS, POLITICS |
+| **Arts & Entertainment** | ARTS, COMEDY, ENTERTAINMENT |
+| **Wellness & Health** | HEALTHY LIVING, WELLNESS |
+| **Business & Tech** | MONEY, TECH, BUSINESS |
+| **Science & Environment** | GREEN, EDUCATION, ENVIRONMENT, SCIENCE |
+| **Sports** | SPORTS |
+| **And 7 more...** | See config.yaml for full mapping |
+
+## 📈 Expected Output
+
+### Models
+```
+models/original/svm_model.pkl                    # 42-class SVM
+models/merged/svm_model.pkl                      # 13-class SVM
+models/merged/xgboost_model.pkl                  # 13-class XGBoost
+```
+
+### Reports
+```
+models/original/classification_report.csv        # Precision/Recall/F1
+models/original/confusion_matrix_numeric.csv     # Confusion Matrix
+models/merged/classification_report.csv          # SVM metrics
+models/merged/xgboost_classification_report.csv  # XGBoost metrics
+```
+
+## 🐛 Troubleshooting
+
+### Missing NLP models
+```bash
+python3 -m spacy download en_core_web_sm
+python3 -c "import nltk; nltk.download('stopwords')"
+```
+
+### Memory issues with large datasets
+Reduce these in `config.yaml`:
+```yaml
+max_features: 25000      # Was 50000
+k_best_features: 10000   # Was 20000
+```
+
+### Check logs for details
+```bash
+tail -f logs/pipeline_*.log
+```
+
+## 📚 Technical Details
+
+**Algorithms**:
+- LinearSVC: Support Vector Machine for multi-class classification
+- XGBoost: Gradient boosting for enhanced performance
+
+**NLP Preprocessing**:
+- Text cleaning with regex
+- Stopword removal (English)
+- Lemmatization with SpaCy
+- TF-IDF feature extraction
+
+**Feature Selection**:
+- Chi-squared test for independence
+- Selects 20K most informative features
+
+## 🔌 Python API
+
+```python
+import sys
+sys.path.insert(0, 'src')
+
+from config_loader import get_config_path
+from model_analysis import ModelAnalyzer
+
+# Configuration
+model_path = get_config_path('model_artifacts.merged.xgboost_model')
+
+# Analysis
+analyzer = ModelAnalyzer()
+report = analyzer.save_comparison_report()
+analyzer.generate_all_visualizations()
+```
+
+## 📦 Dependencies
+
+- **ML/Data**: pandas, numpy, scikit-learn, xgboost
+- **NLP**: nltk, spacy
+- **Visualization**: matplotlib, seaborn
+- **Utils**: PyYAML, newspaper4k
+
+See `requirements.txt` for versions.
+
+## 🚧 Upcoming Features
+
+- Streamlit web dashboard
+- REST API endpoint
+- Deep learning models (LSTM, Transformers)
+- BERT embeddings
+- Docker containerization
+- Model versioning
+- Hyperparameter optimization
+
+## 📞 Support
+
+- Check README for setup issues
+- Review logs in `logs/` directory
+- Open GitHub issue for bugs
+
+## 📄 License
+
+[Add license information]
+
+## 👤 Author
+
+Raghav Nimbalkar
+
+---
+
+**Last Updated**: April 5, 2026  
+**Version**: 1.0.0  
+**Status**: Active Development
