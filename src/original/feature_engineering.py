@@ -1,10 +1,16 @@
 import pandas as pd
 import pickle
+import sys
+from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import SelectKBest, chi2
 
-df = pd.read_csv("/home/skinny/Documents/Code/MultiClassNewsClassification/Data/processed/news_preprocessed.csv")
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
+df = pd.read_csv(get_config_path('files.processed_original'))
 
 # Features and labels
 X_text = df['clean_text']
@@ -38,22 +44,22 @@ X_test = selector.transform(X_test)
 print("Feature selection complete. Selected features:", X_train.shape[1])
 
 # Saving the TF-IDF vectorizer, selector, and datasets
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/tfidf_vectorizer.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.tfidf_vectorizer'), "wb") as f:
     pickle.dump(tfidf, f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/chi2_selector.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.chi2_selector'), "wb") as f:
     pickle.dump(selector, f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/X_train.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.X_train'), "wb") as f:
     pickle.dump(X_train, f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/X_test.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.X_test'), "wb") as f:
     pickle.dump(X_test, f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/y_train.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.y_train'), "wb") as f:
     pickle.dump(y_train, f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/y_test.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.original.y_test'), "wb") as f:
     pickle.dump(y_test, f)
 
-print("Feature matrices and models saved to ../models/")
+print("Feature matrices and models saved to models/original/")

@@ -1,21 +1,27 @@
 import pickle
+import sys
+from pathlib import Path
 from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
 # --- 1. Load Merged Feature Matrices (Updated Paths) ---
 print("Step 1: Loading data from '/Models/Merged/'...")
-with open("../../models/merged/X_train.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.X_train'), "rb") as f:
     X_train = pickle.load(f)
 
-with open("../../models/merged/y_train.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.y_train'), "rb") as f:
     y_train = pickle.load(f)
 
-with open("../../models/merged/X_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.X_test'), "rb") as f:
     X_test = pickle.load(f)
 
-with open("../../models/merged/y_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.y_test'), "rb") as f:
     y_test = pickle.load(f)
 print("Data loading complete.")
 
@@ -33,7 +39,7 @@ print("Training complete.")
 
 # --- 4. Save the Trained Model (Updated Path) ---
 print("Step 4: Saving the trained model...")
-output_path = "../../models/merged/svm_model.pkl"
+output_path = get_config_path('model_artifacts.merged.svm_model')
 with open(output_path, "wb") as f:
     pickle.dump(svm_clf, f)
 print(f"Trained SVM model saved to {output_path}")

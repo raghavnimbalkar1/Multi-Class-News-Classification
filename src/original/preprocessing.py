@@ -3,12 +3,19 @@ import re
 import nltk
 import spacy
 from nltk.corpus import stopwords
+import sys
+from pathlib import Path
 
-nltk.download('stopwords')
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
+nltk.download('stopwords', quiet=True)
 
 nlp = spacy.load("en_core_web_sm")
 
-df = pd.read_json("/home/skinny/Documents/Code/MultiClassNewsClassification/Data/raw/NewsData.json", lines=True)
+raw_data_path = get_config_path('files.raw_data')
+df = pd.read_json(raw_data_path, lines=True)
 
 df['text'] = df['headline'].fillna('') + " " + df['short_description'].fillna('')
 
@@ -41,6 +48,7 @@ df['clean_text'] = df['clean_text'].apply(lemmatize_text)
 
 # Saving preprocessed dataset
 
-df[['category', 'clean_text']].to_csv("/home/skinny/Documents/Code/MultiClassNewsClassification/Data/processed/news_preprocessed.csv", index=False)
+output_path = get_config_path('files.processed_original')
+df[['category', 'clean_text']].to_csv(output_path, index=False)
 
-print("Preprocessing complete. Dataset saved to data/processed/news_preprocessed.csv")
+print(f"Preprocessing complete. Dataset saved to {output_path}")

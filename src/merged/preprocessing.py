@@ -3,6 +3,12 @@ import re
 import nltk
 import spacy
 from nltk.corpus import stopwords
+import sys
+from pathlib import Path
+
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
 
 # --- 1. Initial Setup ---
 print("Step 1: Setting up libraries...")
@@ -13,7 +19,8 @@ print("Setup complete.")
 
 # --- 2. Load Raw Data (Same as before) ---
 print("Step 2: Loading raw data from JSON...")
-df = pd.read_json("../../Data/raw/NewsData.json", lines=True)
+raw_data_path = get_config_path('files.raw_data')
+df = pd.read_json(raw_data_path, lines=True)
 print(f"Loaded {len(df)} articles.")
 
 # --- 3. MERGE CATEGORIES (The New Step) ---
@@ -114,6 +121,6 @@ print("Text processing complete.")
 # --- 5. Save the New Preprocessed Dataset (Updated Path) ---
 
 print("Step 5: Saving the new merged dataset...")
-output_path = "../../Data/processed/news_preprocessed_merged.csv"
+output_path = get_config_path('files.processed_merged')
 df[['category', 'clean_text']].to_csv(output_path, index=False)
 print(f"Preprocessing complete. New dataset saved to {output_path}")

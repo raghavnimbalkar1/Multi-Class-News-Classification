@@ -1,12 +1,18 @@
 import pandas as pd
 import pickle
+import sys
+from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import SelectKBest, chi2
 
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
 # --- 1. Load the Merged Dataset (Updated Path) ---
 print("Step 1: Loading the merged and preprocessed dataset...")
-input_path = "../../Data/processed/news_preprocessed_merged.csv"
+input_path = get_config_path('files.processed_merged')
 df = pd.read_csv(input_path)
 print(f"Loaded dataset from {input_path}")
 
@@ -42,22 +48,22 @@ print(f"Feature selection complete. Selected features: {X_train.shape[1]}")
 # --- 4. Saving the New Artifacts (Updated Paths) ---
 print("Step 5: Saving all processed data and models to '/Models/Merged/'...")
 
-with open("../../models/merged/tfidf_vectorizer.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.tfidf_vectorizer'), "wb") as f:
     pickle.dump(tfidf, f)
 
-with open("../../models/merged/chi2_selector.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.chi2_selector'), "wb") as f:
     pickle.dump(selector, f)
 
-with open("../../models/merged/X_train.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.X_train'), "wb") as f:
     pickle.dump(X_train, f)
 
-with open("../../models/merged/X_test.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.X_test'), "wb") as f:
     pickle.dump(X_test, f)
 
-with open("../../models/merged/y_train.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.y_train'), "wb") as f:
     pickle.dump(y_train, f)
 
-with open("../../models/merged/y_test.pkl", "wb") as f:
+with open(get_config_path('model_artifacts.merged.y_test'), "wb") as f:
     pickle.dump(y_test, f)
 
 print("Feature engineering for the merged dataset is complete.")

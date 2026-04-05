@@ -1,19 +1,25 @@
 import pickle
+import sys
+from pathlib import Path
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
 # --- 1. Load the New Model and Test Data (Updated Paths) ---
 print("Step 1: Loading model and test data from '/Models/Merged/'...")
-with open("../../models/merged/X_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.X_test'), "rb") as f:
     X_test = pickle.load(f)
 
-with open("../../models/merged/y_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.y_test'), "rb") as f:
     y_test = pickle.load(f)
 
-with open("../../models/merged/svm_model.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.svm_model'), "rb") as f:
     svm_clf = pickle.load(f)
 print("Loading complete.")
 
@@ -33,7 +39,7 @@ print(f"Final Model Accuracy: {accuracy}")
 report = classification_report(y_test, y_pred, output_dict=True)
 
 # Save classification report as CSV
-report_path = "../../models/merged/classification_report.csv"
+report_path = get_config_path('model_artifacts.merged.classification_report')
 df_report = pd.DataFrame(report).transpose()
 df_report.to_csv(report_path, index=True)
 print(f"Classification report saved to {report_path}")
@@ -50,14 +56,14 @@ plt.title("Confusion Matrix (Improved Model - 13 Classes)")
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.tight_layout()
-cm_path_png = "../../models/merged/confusion_matrix_evaluate.png"
+cm_path_png = get_config_path('model_artifacts.merged.confusion_matrix').replace('.csv', '_visual.png')
 plt.savefig(cm_path_png)
 print(f"Visual confusion matrix saved to {cm_path_png}")
 
 # Save numeric confusion matrix as CSV
 cm_df = pd.DataFrame(cm, index=labels, columns=labels)
-cm_path_csv = "../../models/merged/confusion_matrix_numeric.csv"
-cm_df.to_csv(cm_path_csv)
+cm_path_csv = get_config_path('model_artifacts.merged.confusion_matrix')
+cm_df.to_csv(cm_path_csv, index=True)
 print(f"Numeric confusion matrix saved to {cm_path_csv}")
 
 # 5. Find Top Misclassifications (Unchanged Logic) 

@@ -1,0 +1,162 @@
+# Project Configuration - Multi-Class News Classification
+# All paths are relative to the project root directory
+
+project:
+  name: "Multi-Class News Classification"
+  version: "1.0.0"
+
+paths:
+  # Data paths
+  data:
+    raw: "Data/raw"
+    processed: "Data/processed"
+  
+  # Model paths
+  models:
+    base: "models"
+    original: "models/original"
+    merged: "models/merged"
+
+# Direct file paths for easy access
+files:
+  raw_data: "Data/raw/NewsData.json"
+  processed_original: "Data/processed/news_preprocessed.csv"
+  processed_merged: "Data/processed/news_preprocessed_merged.csv"
+
+# Model artifacts organized by approach
+model_artifacts:
+  original:
+    tfidf_vectorizer: "models/original/tfidf_vectorizer.pkl"
+    chi2_selector: "models/original/chi2_selector.pkl"
+    svm_model: "models/original/svm_model.pkl"
+    label_encoder: "models/original/label_encoder.pkl"
+    X_train: "models/original/X_train.pkl"
+    X_test: "models/original/X_test.pkl"
+    y_train: "models/original/y_train.pkl"
+    y_test: "models/original/y_test.pkl"
+    classification_report: "models/original/classification_report.csv"
+    confusion_matrix: "models/original/confusion_matrix_numeric.csv"
+  
+  merged:
+    tfidf_vectorizer: "models/merged/tfidf_vectorizer.pkl"
+    chi2_selector: "models/merged/chi2_selector.pkl"
+    svm_model: "models/merged/svm_model.pkl"
+    xgboost_model: "models/merged/xgboost_model.pkl"
+    label_encoder: "models/merged/label_encoder.pkl"
+    X_train: "models/merged/X_train.pkl"
+    X_test: "models/merged/X_test.pkl"
+    y_train: "models/merged/y_train.pkl"
+    y_test: "models/merged/y_test.pkl"
+    classification_report: "models/merged/classification_report.csv"
+    confusion_matrix: "models/merged/confusion_matrix_numeric.csv"
+    xgboost_classification_report: "models/merged/xgboost_classification_report.csv"
+    xgboost_confusion_matrix: "models/merged/xgboost_confusion_matrix_numeric.csv"
+
+# NLP and preprocessing settings
+preprocessing:
+  remove_html: true
+  lowercase: true
+  remove_special_chars: true
+  remove_extra_spaces: true
+  remove_stopwords: true
+  lemmatization: true
+  
+# Feature engineering settings
+features:
+  tfidf:
+    max_features: 50000
+    ngram_range: [1, 2]
+  
+  feature_selection:
+    method: "chi2"
+    k_best_features: 20000
+
+# Model settings
+models:
+  original:
+    type: "LinearSVC"
+    max_iter: 5000
+    random_state: 42
+  
+  merged:
+    svm:
+      type: "LinearSVC"
+      max_iter: 5000
+      random_state: 42
+    xgboost:
+      type: "XGBClassifier"
+      objective: "multi:softmax"
+      n_jobs: -1
+      random_state: 42
+
+# Train-test split
+train_test_split:
+  test_size: 0.2
+  random_state: 69
+  stratify: true
+
+# Category mapping for merged dataset
+category_mapping:
+  POLITICS & WORLD NEWS:
+    - "THE WORLDPOST"
+    - "WORLDPOST"
+    - "WORLD NEWS"
+    - "U.S. NEWS"
+    - "MEDIA"
+    - "IMPACT"
+    - "POLITICS"
+  
+  ARTS & ENTERTAINMENT:
+    - "ARTS"
+    - "ARTS & CULTURE"
+    - "CULTURE & ARTS"
+    - "COMEDY"
+    - "ENTERTAINMENT"
+  
+  WELLNESS & HEALTH:
+    - "HEALTHY LIVING"
+    - "FIFTY"
+    - "WELLNESS"
+  
+  BUSINESS & TECH:
+    - "MONEY"
+    - "TECH"
+    - "BUSINESS"
+  
+  FAMILY & RELATIONSHIPS:
+    - "PARENTS"
+    - "DIVORCE"
+    - "WEDDINGS"
+    - "PARENTING"
+  
+  HOME & STYLE:
+    - "STYLE"
+    - "STYLE & BEAUTY"
+    - "HOME & LIVING"
+  
+  FOOD & TRAVEL:
+    - "TASTE"
+    - "TRAVEL"
+    - "FOOD & DRINK"
+  
+  SCIENCE & ENVIRONMENT:
+    - "GREEN"
+    - "COLLEGE"
+    - "EDUCATION"
+    - "ENVIRONMENT"
+    - "SCIENCE"
+  
+  VOICES & IDENTITY:
+    - "LATINO VOICES"
+    - "QUEER VOICES"
+    - "BLACK VOICES"
+    - "WOMEN"
+  
+  GENERAL NEWS & ODDITIES:
+    - "GOOD NEWS"
+    - "WEIRD NEWS"
+  
+  CRIME: ["CRIME"]
+  SPORTS: ["SPORTS"]
+  RELIGION: ["RELIGION"]
+  TRAVEL: ["TRAVEL"]

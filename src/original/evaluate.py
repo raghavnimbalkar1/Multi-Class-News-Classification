@@ -1,19 +1,25 @@
 import pickle
+import sys
+from pathlib import Path
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
 # Load test data
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/X_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.original.X_test'), "rb") as f:
     X_test = pickle.load(f)
 
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/y_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.original.y_test'), "rb") as f:
     y_test = pickle.load(f)
 
 # Load trained SVM model
-with open("/home/skinny/Documents/Code/MultiClassNewsClassification/models/svm_model.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.original.svm_model'), "rb") as f:
     svm_clf = pickle.load(f)
 
 # Predict on test set
@@ -30,8 +36,8 @@ print(classification_report(y_test, y_pred))
 
 # Save classification report as CSV
 df_report = pd.DataFrame(report).transpose()
-df_report.to_csv("/home/skinny/Documents/Code/MultiClassNewsClassification/models/classification_report.csv", index=True)
-print("Classification report saved as models/classification_report.csv")
+df_report.to_csv(get_config_path('model_artifacts.original.classification_report'), index=True)
+print(f"Classification report saved to {get_config_path('model_artifacts.original.classification_report')}")
 
 # Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -52,11 +58,5 @@ cm = confusion_matrix(y_test, y_pred)
 labels = sorted(list(set(y_test)))  # or your predefined label list
 
 cm_df = pd.DataFrame(cm, index=labels, columns=labels)
-cm_df.to_csv("/home/skinny/Documents/Code/MultiClassNewsClassification/models/confusion_matrix_numeric.csv")
-
-# Find top misclassifications
-cm_off_diag = cm.copy()
-np.fill_diagonal(cm_off_diag, 0)
-misclassified_pairs = np.unravel_index(np.argsort(cm_off_diag.ravel())[::-1], cm_off_diag.shape)
-for i, j in zip(*misclassified_pairs[:10]):
-    print(f"Actual: {labels[i]}, Predicted: {labels[j]}, Count: {cm[i, j]}")
+cm_df.to_csv(get_config_path('model_artifacts.original.confusion_matrix'), index=True)
+print(f"Numeric confusion matrix saved to {get_config_path('model_artifacts.original.confusion_matrix')}")

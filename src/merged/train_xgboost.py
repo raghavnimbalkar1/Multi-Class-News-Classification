@@ -2,23 +2,29 @@
 
 import pickle
 import pandas as pd
+import sys
+from pathlib import Path
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config_loader import get_config_path
+
 # --- 1. Load Merged Feature Matrices ---
 print("Step 1: Loading data from '/models/merged/'...")
-with open("../../models/merged/X_train.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.X_train'), "rb") as f:
     X_train = pickle.load(f)
 
-with open("../../models/merged/y_train.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.y_train'), "rb") as f:
     y_train = pickle.load(f) # y_train is still text labels
 
 # THIS IS THE FIX: We need to load X_test for the quick check
-with open("../../models/merged/X_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.X_test'), "rb") as f:
     X_test = pickle.load(f) 
 
-with open("../../models/merged/y_test.pkl", "rb") as f:
+with open(get_config_path('model_artifacts.merged.y_test'), "rb") as f:
     y_test = pickle.load(f) # y_test is still text labels
 print("Data loading complete.")
 
@@ -29,7 +35,7 @@ y_train_encoded = encoder.fit_transform(y_train)
 y_test_encoded = encoder.transform(y_test) # Use the same encoder for test set
 
 # Save the encoder so we can decode the predictions later
-output_encoder_path = "../../models/merged/label_encoder.pkl"
+output_encoder_path = get_config_path('model_artifacts.merged.label_encoder')
 with open(output_encoder_path, "wb") as f:
     pickle.dump(encoder, f)
 print(f"Label encoder saved to {output_encoder_path}")
@@ -51,7 +57,7 @@ print("Training complete.")
 
 # --- 5. Save the Trained Model ---
 print("Step 5: Saving the trained XGBoost model...")
-output_path = "../../models/merged/xgboost_model.pkl"
+output_path = get_config_path('model_artifacts.merged.xgboost_model')
 with open(output_path, "wb") as f:
     pickle.dump(xgb_clf, f)
 print(f"Trained XGBoost model saved to {output_path}")

@@ -2,6 +2,12 @@ import pandas as pd
 import newspaper
 from newspaper import Config
 import time
+import sys
+from pathlib import Path
+
+# Add parent directory to path to import config_loader
+sys.path.insert(0, str(Path(__file__).parent))
+from config_loader import get_config_path
 
 # Standard config to bypass basic bot-blockers
 config = Config()
