@@ -101,6 +101,56 @@ Generates:
 - `model_comparison_report.txt` - Detailed metrics comparison
 - `visualizations/accuracy_comparison.png` - Accuracy chart
 
+### 🎯 Interactive Dashboard (NEW!)
+
+Launch the **Streamlit web application** for an interactive interface:
+
+```bash
+# Quick launch with automatic dependency installation
+python3 src/launch_dashboard.py
+
+# Or manually start Streamlit:
+streamlit run src/app.py
+```
+
+The dashboard will open at `http://localhost:8501` and provides:
+
+#### Features:
+1. **Single Article Predictor** 📝
+   - Paste or type article text
+   - Get instant category prediction
+   - View confidence scores
+   - See top 5 predictions
+
+2. **Batch Processor** 📊
+   - Upload CSV with multiple articles
+   - Process all at once
+   - Download results as CSV
+   - Track processing progress
+
+3. **Model Analytics** 📈
+   - Compare model performance (Original vs Merged, SVM vs XGBoost)
+   - View confusion matrices
+   - Analyze per-category metrics
+   - Summary statistics
+
+4. **Live News Scraper** 🔗
+   - Enter news article URLs
+   - Automatically scrape and extract content
+   - Classify fetched articles
+   - View article metadata
+
+5. **Documentation** 📚
+   - Quick start guide
+   - Category reference
+   - Configuration details
+   - Troubleshooting
+
+#### Dashboard Models:
+- Switch between approaches: Original (42 categories) or Merged (13 categories)
+- For merged: Choose between LinearSVC or XGBoost
+- Auto-loads correct model based on selection
+
 ## 📁 Project Structure
 
 ```
@@ -119,6 +169,10 @@ Multi-Class-News-Classification/
 │   ├── pipeline.py                # Unified pipeline orchestration
 │   ├── model_analysis.py          # Model comparison utilities
 │   ├── scraper.py                 # Web scraping utilities
+│   ├── inference.py               # Prediction utilities (NEW)
+│   ├── visualization.py           # Dashboard visualization utilities (NEW)
+│   ├── app.py                     # Streamlit dashboard application (NEW)
+│   ├── launch_dashboard.py        # Dashboard launcher script (NEW)
 │   ├── original/                  # 42-category pipeline
 │   │   ├── preprocessing.py
 │   │   ├── feature_engineering.py
@@ -243,17 +297,42 @@ tail -f logs/pipeline_*.log
 
 ## Python API
 
+### Configuration Access
 ```python
 import sys
 sys.path.insert(0, 'src')
 
-from config_loader import get_config_path
-from model_analysis import ModelAnalyzer
+from config_loader import get_config_path, load_config
 
-# Configuration
+# Get specific path
 model_path = get_config_path('model_artifacts.merged.xgboost_model')
 
-# Analysis
+# Load full config
+config = load_config()
+```
+
+### Making Predictions
+```python
+from inference import get_classifier
+
+# Initialize classifier
+classifier = get_classifier(approach='merged', model_type='svm')
+
+# Single prediction
+result = classifier.predict("Apple announces new iPhone features")
+print(f"Category: {result['prediction']}")
+print(f"Confidence: {result['confidence']:.1%}")
+print(f"Top 5: {result['probabilities']}")
+
+# Batch predictions
+texts = ["Article 1 text", "Article 2 text", "Article 3 text"]
+results_df = classifier.batch_predict(texts)
+```
+
+### Model Analysis
+```python
+from model_analysis import ModelAnalyzer
+
 analyzer = ModelAnalyzer()
 report = analyzer.save_comparison_report()
 analyzer.generate_all_visualizations()
@@ -263,6 +342,7 @@ analyzer.generate_all_visualizations()
 
 - **ML/Data**: pandas, numpy, scikit-learn, xgboost
 - **NLP**: nltk, spacy
+- **Web UI**: streamlit (new)
 - **Visualization**: matplotlib, seaborn
 - **Utils**: PyYAML, newspaper4k
 
@@ -270,7 +350,7 @@ See `requirements.txt` for versions.
 
 ## Upcoming Features
 
-- Streamlit web dashboard
+- ✅ Streamlit web dashboard (COMPLETE)
 - REST API endpoint
 - Deep learning models (LSTM, Transformers)
 - BERT embeddings
