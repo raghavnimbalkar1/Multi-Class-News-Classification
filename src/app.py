@@ -109,7 +109,7 @@ def header_section():
 
 def tab1_predictor(classifier: NewsClassifier):
     """Single article prediction tab."""
-    st.header("🎯 Single Article Predictor")
+    st.header("Single Article Predictor")
     
     col1, col2 = st.columns([2, 1])
     
@@ -141,7 +141,7 @@ def tab1_predictor(classifier: NewsClassifier):
     # Predict button
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        if st.button("🔍 Classify", use_container_width=True):
+        if st.button("Classify", use_container_width=True):
             if not text or len(text.strip()) < 10:
                 st.error("Please enter at least 10 characters")
             else:
@@ -169,7 +169,7 @@ def tab1_predictor(classifier: NewsClassifier):
 
 def tab2_batch_processor(classifier: NewsClassifier):
     """Batch processing tab."""
-    st.header("📊 Batch Processor")
+    st.header("Batch Processor")
     
     upload_method = st.radio("Upload Method", ["CSV File", "Paste Text Lines"])
     
@@ -238,7 +238,7 @@ def tab2_batch_processor(classifier: NewsClassifier):
 
 def tab3_model_analytics(approach: str, model_type: str, classifier: NewsClassifier):
     """Model analytics and comparison tab."""
-    st.header("📈 Model Analytics")
+    st.header("Model Analytics")
     
     analytics_tab1, analytics_tab2, analytics_tab3 = st.tabs(
         ["Model Comparison", "Confusion Matrix", "Category Performance"]
@@ -279,7 +279,7 @@ def tab3_model_analytics(approach: str, model_type: str, classifier: NewsClassif
 
 def tab4_live_scraper():
     """Live news scraping tab."""
-    st.header("🔗 Live News Scraper")
+    st.header("Live News Scraper")
     
     st.info("""
     This tab allows you to scrape news from URLs and classify them automatically.
@@ -291,7 +291,7 @@ def tab4_live_scraper():
         placeholder="https://example.com/news/article"
     )
     
-    if st.button("🌐 Scrape & Classify"):
+    if st.button("Scrape & Classify"):
         if not url:
             st.error("Please enter a valid URL")
         else:
@@ -321,7 +321,7 @@ def tab4_live_scraper():
                     
                     with col2:
                         # Classify
-                        if st.button("🎯 Classify Article"):
+                        if st.button("Classify Article"):
                             classifier = load_classifier_cached('merged', 'svm')
                             if classifier:
                                 result = classifier.predict(article_data.get('title', '') + ' ' + text)
@@ -342,7 +342,7 @@ def tab4_live_scraper():
 
 def tab5_documentation():
     """Documentation and help tab."""
-    st.header("📚 Documentation & Help")
+    st.header("Documentation & Help")
     
     doc_tab1, doc_tab2, doc_tab3 = st.tabs(["Quick Start", "Categories", "Settings"])
     
@@ -456,11 +456,11 @@ def main():
     
     # Main tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "🎯 Predictor",
-        "📊 Batch",
-        "📈 Analytics",
-        "🔗 Scraper",
-        "📚 Documentation"
+        "Predictor",
+        "Batch",
+        "Analytics",
+        "Scraper",
+        "Documentation"
     ])
     
     with tab1:
