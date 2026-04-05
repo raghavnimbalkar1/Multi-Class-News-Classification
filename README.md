@@ -2,7 +2,7 @@
 
 A comprehensive machine learning pipeline for classifying news articles into multiple categories using NLP and advanced classification algorithms.
 
-## 📋 Project Overview
+## Project Overview
 
 This project implements a complete end-to-end news classification system with two parallel approaches:
 
@@ -18,7 +18,7 @@ Stage 1: Data Collection  →  Stage 2: Preprocessing  →  Stage 3: ML Pipeline
    (Scraper)                (Text Cleaning, NLP)      (Training, Evaluation)    (Reports, Dashboard)
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -56,7 +56,7 @@ subprocess.run(['python', '-m', 'spacy', 'download', 'en_core_web_sm'])
 "
 ```
 
-## 🏃 Usage
+## Usage
 
 ### Run Complete Pipeline
 
@@ -135,7 +135,7 @@ Multi-Class-News-Classification/
 └── logs/                          # Pipeline execution logs
 ```
 
-## 🔧 Configuration
+## Configuration
 
 Edit `config.yaml` to customize paths, preprocessing, and model parameters:
 
@@ -154,7 +154,7 @@ features:
     k_best_features: 20000
 ```
 
-## 📊 Pipeline Steps
+## Pipeline Steps
 
 ### 1. Preprocessing
 - Clean text (lowercase, remove HTML/special characters)
@@ -176,7 +176,7 @@ features:
 - Confusion matrices
 - Accuracy scores
 
-## 🎯 Category Mapping (13 Super-Categories)
+## Category Mapping (13 Super-Categories)
 
 | Super-Category | Original Categories (Sample) |
 |---|---|
@@ -188,7 +188,7 @@ features:
 | **Sports** | SPORTS |
 | **And 7 more...** | See config.yaml for full mapping |
 
-## 📈 Expected Output
+## Expected Output
 
 ### Models
 ```
@@ -205,7 +205,7 @@ models/merged/classification_report.csv          # SVM metrics
 models/merged/xgboost_classification_report.csv  # XGBoost metrics
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Missing NLP models
 ```bash
@@ -225,7 +225,7 @@ k_best_features: 10000   # Was 20000
 tail -f logs/pipeline_*.log
 ```
 
-## 📚 Technical Details
+## Technical Details
 
 **Algorithms**:
 - LinearSVC: Support Vector Machine for multi-class classification
@@ -241,7 +241,7 @@ tail -f logs/pipeline_*.log
 - Chi-squared test for independence
 - Selects 20K most informative features
 
-## 🔌 Python API
+## Python API
 
 ```python
 import sys
@@ -259,7 +259,7 @@ report = analyzer.save_comparison_report()
 analyzer.generate_all_visualizations()
 ```
 
-## 📦 Dependencies
+## Dependencies
 
 - **ML/Data**: pandas, numpy, scikit-learn, xgboost
 - **NLP**: nltk, spacy
@@ -268,7 +268,7 @@ analyzer.generate_all_visualizations()
 
 See `requirements.txt` for versions.
 
-## 🚧 Upcoming Features
+## Upcoming Features
 
 - Streamlit web dashboard
 - REST API endpoint
@@ -278,17 +278,17 @@ See `requirements.txt` for versions.
 - Model versioning
 - Hyperparameter optimization
 
-## 📞 Support
+## Support
 
 - Check README for setup issues
 - Review logs in `logs/` directory
 - Open GitHub issue for bugs
 
-## 📄 License
+## License
 
 [Add license information]
 
-## 👤 Author
+## Author
 
 Raghav Nimbalkar
 
