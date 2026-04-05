@@ -10,8 +10,26 @@ import pandas as pd
 from pathlib import Path
 from typing import Dict, Tuple, Optional
 
+try:
+    import joblib
+    HAS_JOBLIB = True
+except ImportError:
+    HAS_JOBLIB = False
+
 sys.path.insert(0, str(Path(__file__).parent))
 from config_loader import get_config_path
+
+
+def _load_pickle_safe(filepath):
+    """Load pickle file with joblib (better for sklearn objects) or fallback to pickle."""
+    if HAS_JOBLIB:
+        try:
+            return joblib.load(filepath)
+        except Exception:
+            pass
+    
+    # Fallback to pickle
+    return pickle.load(open(filepath, 'rb'))
 
 
 class NewsClassifier:
@@ -42,13 +60,11 @@ class NewsClassifier:
         try:
             # Load TF-IDF vectorizer
             tfidf_path = get_config_path(f'model_artifacts{suffix}.tfidf_vectorizer')
-            with open(tfidf_path, 'rb') as f:
-                self.tfidf = pickle.load(f)
+            self.tfidf = _load_pickle_safe(tfidf_path)
             
             # Load feature selector
             selector_path = get_config_path(f'model_artifacts{suffix}.chi2_selector')
-            with open(selector_path, 'rb') as f:
-                self.selector = pickle.load(f)
+            self.selector = _load_pickle_safe(selector_path)
             
             # Load classifier
             if self.approach == "original" or self.model_type == "svm":
@@ -56,14 +72,12 @@ class NewsClassifier:
             else:  # merged + xgboost
                 model_path = get_config_path(f'model_artifacts{suffix}.xgboost_model')
             
-            with open(model_path, 'rb') as f:
-                self.model = pickle.load(f)
+            self.model = _load_pickle_safe(model_path)
             
             # For merged approach with xgboost, load encoder
             if self.approach == "merged" and self.model_type == "xgboost":
                 encoder_path = get_config_path(f'model_artifacts{suffix}.label_encoder')
-                with open(encoder_path, 'rb') as f:
-                    self.encoder = pickle.load(f)
+                self.encoder = _load_pickle_safe(encoder_path)
                 self.classes = self.encoder.classes_
             else:
                 self.classes = self.model.classes_

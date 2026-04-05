@@ -30,7 +30,7 @@ def main():
         print("✗ Streamlit is not installed")
         print("\nInstalling Streamlit...")
         subprocess.check_call([
-            sys.executable, "-m", "pip", "install", "streamlit", ">=1.28.0"
+            sys.executable, "-m", "pip", "install", "streamlit>=1.28.0"
         ])
         print("✓ Streamlit installed successfully")
     

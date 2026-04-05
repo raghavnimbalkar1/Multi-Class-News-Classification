@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config_loader import get_config_path, load_config
+from config_loader import get_config_path
 from inference import get_classifier, NewsClassifier
 from visualization import (
     plot_confusion_matrix, plot_accuracy_comparison,
@@ -383,7 +383,6 @@ def tab5_documentation():
         
         # Get categories from config
         try:
-            config = load_config()
             approach = st.session_state.get('approach', 'merged')
             suffix = f'.{approach}'
             
@@ -420,8 +419,6 @@ def tab5_documentation():
         st.markdown("""
         **Current Configuration**
         """)
-        
-        config = load_config()
         
         # Display key settings
         settings_data = {
